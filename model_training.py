@@ -4,22 +4,22 @@ from sklearn.svm import SVC
 from sklearn.metrics import classification_report, accuracy_score
 import numpy as np
 
-csv_file = 'C:/Users/mansi/Documents/mini/processed/final/features.csv'
-features = pd.read_csv(csv_file)
+features_file = 'C:/Users/mansi/Documents/mini/final/features.csv'
+labels_file = 'C:/Users/mansi/Documents/mini/labeled_audio_data.csv'
 
-csv_file = 'labeled_audio_data.csv'
-labels = pd.read_csv(csv_file)
+features = pd.read_csv(features_file) 
+labels = pd.read_csv(labels_file)      
 
-features = np.random.rand(3200, 13)
-labels = np.random.randint(0, 7, 3200)
-X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
+X = features.iloc[:, 1:].values  
+y = labels.iloc[:, 1].values    
 
-svm_model = SVC(kernel='rbf', C=1.0, gamma='scale')  
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+svm_model = SVC(kernel='rbf', C=5.0, gamma='scale')
 svm_model.fit(X_train, y_train)
 
 y_pred = svm_model.predict(X_test)
 
 print("Accuracy:", accuracy_score(y_test, y_pred))
 print("\nClassification Report:")
-print(classification_report(y_test, y_pred))
+print(classification_report(y_test, y_pred,zero_division=0))
